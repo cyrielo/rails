@@ -1,3 +1,40 @@
+*   `update_columns` now correctly raises `ActiveModel::MissingAttributeError`
+    if the attribute does not exist.
+
+    *Sean Griffin*
+
+*   Add support for hash and url configs in database hash of `ActiveRecord::Base.connected_to`.
+
+    ````
+    User.connected_to(database: { writing: "postgres://foo" }) do
+      User.create!(name: "Gannon")
+    end
+
+    config = { "adapter" => "sqlite3", "database" => "db/readonly.sqlite3" }
+    User.connected_to(database: { reading: config }) do
+      User.count
+    end
+    ````
+
+    *Gannon McGibbon*
+
+*   Support default expression for MySQL.
+
+    MySQL 8.0.13 and higher supports default value to be a function or expression.
+
+    https://dev.mysql.com/doc/refman/8.0/en/create-table.html
+
+    *Ryuta Kamizono*
+
+*   Support expression indexes for MySQL.
+
+    MySQL 8.0.13 and higher supports functional key parts that index
+    expression values rather than column or column prefix values.
+
+    https://dev.mysql.com/doc/refman/8.0/en/create-index.html
+
+    *Ryuta Kamizono*
+
 *   Fix collection cache key with limit and custom select to avoid ambiguous timestamp column error.
 
     Fixes #33056.
@@ -144,13 +181,13 @@
     specify sensitive attributes to specific model.
 
     ```
-    Rails.application.config.filter_parameters += [:credit_card_number]
-    Account.last.inspect # => #<Account id: 123, name: "DHH", credit_card_number: [FILTERED] ...>
+    Rails.application.config.filter_parameters += [:credit_card_number, /phone/]
+    Account.last.inspect # => #<Account id: 123, name: "DHH", credit_card_number: [FILTERED], telephone_number: [FILTERED] ...>
     SecureAccount.filter_attributes += [:name]
     SecureAccount.last.inspect # => #<SecureAccount id: 42, name: [FILTERED], credit_card_number: [FILTERED] ...>
     ```
 
-    *Zhang Kang*
+    *Zhang Kang*, *Yoshiyuki Kinjo*
 
 *   Deprecate `column_name_length`, `table_name_length`, `columns_per_table`,
     `indexes_per_table`, `columns_per_multicolumn_index`, `sql_query_length`,

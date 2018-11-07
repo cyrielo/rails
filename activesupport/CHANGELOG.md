@@ -1,3 +1,12 @@
+*   Fix bug where `#to_options` for `ActiveSupport::HashWithIndifferentAccess`
+    would not act as alias for `#symbolize_keys`.
+
+    *Nick Weiland*
+
+*   Improve the logic that detects non-autoloaded constants.
+
+    *Jan Habermann*, *Xavier Noria*
+
 *   Deprecate `ActiveSupport::Multibyte::Unicode#pack_graphemes(array)` and `ActiveSuppport::Multibyte::Unicode#unpack_graphemes(string)`
     in favor of `array.flatten.pack("U*")` and `string.scan(/\X/).map(&:codepoints)`, respectively.
 
