@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "active_support/deprecation"
+
 module ActiveRecord
   module ConnectionAdapters #:nodoc:
     # Abstract representation of an index definition on a table. Instances of
@@ -256,15 +258,25 @@ module ActiveRecord
     class TableDefinition
       include ColumnMethods
 
-      attr_accessor :indexes
-      attr_reader :name, :temporary, :options, :as, :foreign_keys, :comment
+      attr_reader :name, :temporary, :if_not_exists, :options, :as, :comment, :indexes, :foreign_keys
+      attr_writer :indexes
+      deprecate :indexes=
 
-      def initialize(name, temporary = false, options = nil, as = nil, comment: nil)
+      def initialize(
+        name,
+        temporary: false,
+        if_not_exists: false,
+        options: nil,
+        as: nil,
+        comment: nil,
+        **
+      )
         @columns_hash = {}
         @indexes = []
         @foreign_keys = []
         @primary_keys = nil
         @temporary = temporary
+        @if_not_exists = if_not_exists
         @options = options
         @as = as
         @name = name
